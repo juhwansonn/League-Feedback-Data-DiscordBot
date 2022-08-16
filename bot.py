@@ -7,18 +7,19 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from datetime import date
 import json
+import datetime
 load_dotenv()
 
-#get discord token and riot api key from .evn file
+#get discord token and riot api key from .env file
 TOKEN = os.environ['DISCORD_TOKEN']
 APIKEY = os.environ['APIKEY']
 
 #each server should have different reported db
-class server:
-    def __init__(self):
-        self.reported = []
-        self.reportedid = []
+class Server:
+    def __init__(self, report: dict):
         self.report = {} #{reportedid:[reporter,date,reason]}
+        
+
 
 servers = {}
 bot = commands.Bot(command_prefix='&', description='db for discord server')
@@ -26,7 +27,7 @@ bot = commands.Bot(command_prefix='&', description='db for discord server')
 async def on_ready():
     GUILD = []
     async for guild in bot.fetch_guilds(limit=150):
-        servers[guild.name] = server()
+        servers[guild.name] = Server()
         GUILD.append(guild.name)    
     #which guild use this discord bot : now only HAN server
     print(f"Allowed servers: {GUILD}")
@@ -45,11 +46,26 @@ async def test(ctx):
 #report user to DB
 @bot.command(name='report', aliases=['r','Report','R'], help='Reporting league user')
 async def report(ctx, *reporting):
+    """
+    1. self.report에 저장 - completed
+    2. text file에 저장 - TODO
+    &report Kevin Kookies, 분당 와드 한개
+    Kevin Kookies, 분당 와드 한개
+    self.report = {} #{reportedid:[reporter,date,reason]}
+    """
     #  &report Kevin Kookies, 분당 와드 한개
     reportingline = ' '.join(reporting)
     await ctx.send(reportingline)
+    id_and_reason = reporting.split(', ')
+    reportedid = id_and_reason[0]
+    reason = id_and_reason[1]
+    servers[ctx.message.guild.name].report[reportedid] = [ctx.author, datetime.datetime.now(), reason]
 
-#search use in DB
+
+    
+    
+
+#search user in DB
 @bot.command(name='search', aliases=['s','Search','S'], help='Searching users in the dict')
 async def search(ctx, *searching):
     searchingline = ' '.join(searching)
