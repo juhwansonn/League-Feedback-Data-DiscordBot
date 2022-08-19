@@ -49,7 +49,6 @@ async def report(ctx, *reporting):
     &report Kevin Kookies, 분당 와드 한개
     Kevin Kookies, 분당 와드 한개
     self.report = {} #{reportedid:[reporter,date,reason]} 
-    'abc, def'
     """
     #  &report Kevin Kookies, 분당 와드 한개
     reportingline = ' '.join(reporting)
@@ -57,9 +56,11 @@ async def report(ctx, *reporting):
     id_and_reason = reportingline.split(', ')
     reportedid = id_and_reason[0]
     reason = id_and_reason[1]
-    servers[ctx.message.guild.name].report[reportedid] = [ctx.author, datetime.datetime.now(), reason]
+    summonerInfo = (requests.get('https://'+'na1'+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + reportedid + '?api_key=' + APIKEY)).json()
+    puuid = summonerInfo['puuid']
+    servers[ctx.message.guild.name].report[puuid] = [ctx.author, datetime.datetime.now(), reason]
     with open ('data.txt', 'a') as data:
-        data.write(reportedid + "/" + str(ctx.author) + '/' + str(datetime.datetime.now()) + '/' + reason + '\n')
+        data.write(str(puuid) + "/" + str(ctx.author) + '/' + str(datetime.datetime.now()) + '/' + reason + '\n')
     data.close()
 
 #search user in DB
