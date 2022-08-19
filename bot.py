@@ -60,7 +60,7 @@ async def report(ctx, *reporting):
     reportedid = id_and_reason[0]
     reason = id_and_reason[1]
     servers[ctx.message.guild.name].report[reportedid] = [ctx.author, datetime.datetime.now(), reason]
-    with open (data.txt, 'w') as data:
+    with open ("data.txt", 'w') as data:
         data.write('Reported ID:', reportedid, '\n')
         data.write('Reporter:', ctx.author, '\n')
         data.write('Time: ', datetime.datetime.now(), '\n')
