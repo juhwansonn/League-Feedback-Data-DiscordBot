@@ -47,8 +47,8 @@ async def test(ctx):
 @bot.command(name='report', aliases=['r','Report','R'], help='Reporting league user')
 async def report(ctx, *reporting):
     """
-    1. self.report에 저장 - completed
-    2. text file에 저장 - TODO
+    1. self.report에 저장 
+    2. text file에 저장 
     &report Kevin Kookies, 분당 와드 한개
     Kevin Kookies, 분당 와드 한개
     self.report = {} #{reportedid:[reporter,date,reason]}
@@ -60,6 +60,14 @@ async def report(ctx, *reporting):
     reportedid = id_and_reason[0]
     reason = id_and_reason[1]
     servers[ctx.message.guild.name].report[reportedid] = [ctx.author, datetime.datetime.now(), reason]
+    with open (data.txt, 'w') as data:
+        data.write('Reported ID:', reportedid, '\n')
+        data.write('Reporter:', ctx.author, '\n')
+        data.write('Time: ', datetime.datetime.now(), '\n')
+        data.write('Reason:', reason, '\n')
+    data.close()
+
+
 
 
     
