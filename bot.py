@@ -16,10 +16,8 @@ APIKEY = os.environ['APIKEY']
 
 #each server should have different reported db
 class Server:
-    def __init__(self, report: dict):
+    def __init__(self):
         self.report = {} #{reportedid:[reporter,date,reason]}
-        
-
 
 servers = {}
 bot = commands.Bot(command_prefix='&', description='db for discord server')
@@ -31,13 +29,12 @@ async def on_ready():
         GUILD.append(guild.name)    
     #which guild use this discord bot : now only HAN server
     print(f"Allowed servers: {GUILD}")
-
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
     print('-'*20)
     await bot.change_presence(activity=discord.Game(name='&help'))
-
+    
 @bot.command(name='test', aliases=['t','Test','T'], help='For test')
 async def test(ctx):
     print ("check")
@@ -51,27 +48,19 @@ async def report(ctx, *reporting):
     2. text file에 저장 
     &report Kevin Kookies, 분당 와드 한개
     Kevin Kookies, 분당 와드 한개
-    self.report = {} #{reportedid:[reporter,date,reason]}
+    self.report = {} #{reportedid:[reporter,date,reason]} 
+    'abc, def'
     """
     #  &report Kevin Kookies, 분당 와드 한개
     reportingline = ' '.join(reporting)
     await ctx.send(reportingline)
-    id_and_reason = reporting.split(', ')
+    id_and_reason = reportingline.split(', ')
     reportedid = id_and_reason[0]
     reason = id_and_reason[1]
     servers[ctx.message.guild.name].report[reportedid] = [ctx.author, datetime.datetime.now(), reason]
-    with open ("data.txt", 'w') as data:
-        data.write('Reported ID:', reportedid, '\n')
-        data.write('Reporter:', ctx.author, '\n')
-        data.write('Time: ', datetime.datetime.now(), '\n')
-        data.write('Reason:', reason, '\n')
+    with open ('data.txt', 'a') as data:
+        data.write(reportedid + "/" + str(ctx.author) + '/' + str(datetime.datetime.now()) + '/' + reason + '\n')
     data.close()
-
-
-
-
-    
-    
 
 #search user in DB
 @bot.command(name='search', aliases=['s','Search','S'], help='Searching users in the dict')
