@@ -62,7 +62,6 @@ async def report(ctx, *reporting):
         data.write(reportedid + "/" + str(ctx.author) + '/' + str(datetime.datetime.now()) + '/' + reason + '\n')
     data.close()
 
-
 #search user in DB
 @bot.command(name='search', aliases=['s','Search','S'], help='Searching users in the dict')
 async def search(ctx, *searching):
