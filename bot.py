@@ -67,8 +67,26 @@ async def report(ctx, *reporting):
 @bot.command(name='search', aliases=['s','Search','S'], help='Searching users in the dict')
 async def search(ctx, *searching):
     searchingline = ' '.join(searching)
+    users = searching.split(' joined the lobby')
+    puuids = []
+    for user in users:
+        puuids.append((requests.get('https://'+'na1'+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + user + '?api_key=' + APIKEY)).json())
+    if len(puuids) != 5:
+        ctx.send('Error: Missing Info. Copy and paste summoner infos again.')
+        # raise ValueError('')
+        return 
     await ctx.send(searchingline)
-  
+    with open ('data.txt', 'r') as data:
+        for line in data:
+            info = line.split('/')
+            for puuid in puuids:
+                if puuid == info[0]:
+                    is_present = True
+                    ctx.send(info[-1])
+        if not is_present:
+            return ctx.send('Users do not exist in the database. You are good to play!')
+    data.close()
+
 #just for fun. mimicing multisearch. very slow
 @bot.command(name='match', aliases=['m','Match','M'], help='Match history for searched user')
 async def match(ctx, *searching):
