@@ -57,6 +57,7 @@ async def report(ctx, *reporting):
     reportedid = id_and_reason[0]
     reason = id_and_reason[1]
     summonerInfo = (requests.get('https://'+'na1'+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + reportedid + '?api_key=' + APIKEY)).json()
+    print(summonerInfo)
     puuid = summonerInfo['puuid']
     servers[ctx.message.guild.name].report[puuid] = [ctx.author, datetime.datetime.now(), reason]
     with open ('data.txt', 'a') as data:
