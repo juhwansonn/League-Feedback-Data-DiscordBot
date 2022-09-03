@@ -72,7 +72,7 @@ async def search(ctx, *searching):
     for user in users:
         puuids.append((requests.get('https://'+'na1'+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + user + '?api_key=' + APIKEY)).json())
     if len(puuids) != 5:
-        ctx.send('Error: Missing Info. Copy and paste summoner infos again.')
+        ctx.send('Error: Missing Info. Copy and paste summoner info again.')
         # raise ValueError('')
         return 
     await ctx.send(searchingline)
