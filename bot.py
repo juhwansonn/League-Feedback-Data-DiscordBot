@@ -60,7 +60,8 @@ async def report(ctx, *reporting):
     print(summonerInfo)
     puuid = summonerInfo['puuid']
     servers[ctx.message.guild.name].report[puuid] = [ctx.author, datetime.datetime.now(), reason]
-    with open ('data.txt', 'a') as data:
+    print(servers[ctx.message.guild.name].report[puuid])
+    with open ('data.txt', 'a', encoding='utf-8') as data:
         data.write(str(puuid) + "/" + str(ctx.author) + '/' + str(datetime.datetime.now()) + '/' + reason + '\n')
     data.close()
 
@@ -70,6 +71,7 @@ async def search(ctx, *searching):
     searchingline = ' '.join(searching)
     await ctx.send(searchingline)
     users = searchingline.split(' joined the lobby')
+    users = res = [ele for ele in users if ele.strip()]
     puuids = []
     for user in users:
         summonerInfo = (requests.get('https://'+'na1'+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + user + '?api_key=' + APIKEY)).json()
@@ -80,13 +82,13 @@ async def search(ctx, *searching):
         await ctx.send('Error: Missing Info. Copy and paste summoner info again.')
         return 
     is_present = False 
-    with open ('data.txt', 'r') as data:
+    with open ('data.txt', 'r', encoding='utf-8') as data:
         for line in data:
             info = line.split('/')
-            for puuid in puuids:
+            for idx, puuid in enumerate(puuids):
                 if puuid == info[0]:
                     is_present = True
-                    await ctx.send(info[-1])
+                    await ctx.send("**"+users[idx]+"**"+" is reported by "+"**"+info[-1]+"**")
         if not is_present:
             await ctx.send('Users do not exist in the database. You are good to play!')
     data.close()
