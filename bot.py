@@ -84,7 +84,7 @@ async def search(ctx, *searching):
                     is_present = True
                     ctx.send(info[-1])
         if not is_present:
-            return ctx.send('Users do not exist in the database. You are good to play!')
+            ctx.send('Users do not exist in the database. You are good to play!')
     data.close()
 
 #just for fun. mimicing multisearch. very slow
